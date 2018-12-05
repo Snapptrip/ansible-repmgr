@@ -27,16 +27,3 @@
     owner: root
     group: root
     mode: "0644"
-  notify:
-    - restart repmgrd
-
-- name: repmgrd debian default file
-  template:
-    src: default.j2
-    dest: /etc/default/repmgrd
-    owner: root
-    group: root
-    mode: "0644"
-  notify:
-    - restart repmgrd
-

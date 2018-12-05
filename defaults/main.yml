@@ -1,4 +1,3 @@
----
 repmgr_package_state: present
 
 repmgr_packages:
@@ -12,10 +11,9 @@ repmgr_user: postgres
 repmgr_group: postgres
 repmgr_cluster_group: all
 repmgr_bootstrap: off
-repmgr_pg_data_dir: /var/lib/postgresql/9.4/main
-repmgr_func_path: /usr/share/postgresql/9.4/contrib/repmgr_funcs.sql
+repmgr_pg_data_dir: /var/lib/postgresql/10/main
 
-repmgr_cluster_name: test
+repmgr_cluster_name: main
 # repmgr_node_id must be set
 repmgr_is_master: off
 repmgr_master_node: "{{ hostvars[groups[repmgr_cluster_group][0]].ansible_default_ipv4.address }}"
@@ -26,7 +24,7 @@ repmgr_db_user: repmgr
 # repmgr_db_password must be set
 repmgr_conninfo: "host={{ repmgr_node_address }} dbname={{ repmgr_db_name }} user={{ repmgr_db_user }}"
 repmgr_upstream_node:
-repmgr_use_replication_slots: 0
+repmgr_use_replication_slots: 1
 repmgr_loglevel: NOTICE
 repmgr_logfacility: LOCAL0
 repmgr_logfile:
@@ -58,8 +56,8 @@ repmgr_event_notification_command: /bin/true  %n %e %s "%t" "%d"
 repmgr_event_notifications: []
 
 # repmgr_pg_bindir highly recommend to set up
-repmgr_rsync_options: --archive --checksum --compress --progress --rsh="ssh -o \"StrictHostKeyChecking no\""
-repmgr_ssh_options: -o "StrictHostKeyChecking no"
+repmgr_rsync_options: --archive --checksum --compress --progress
+repmgr_ssh_options: -q -o ConnectTimeout=10
 repmgr_pg_ctl_options: -s
 repmgr_pg_basebackup_options: --xlog-method=s
 repmgr_master_response_timeout: 60
@@ -71,22 +69,3 @@ repmgr_promote_command: repmgr standby promote -f {{ repmgr_conf }}
 repmgr_follow_command: repmgr standby follow -f {{ repmgr_conf }} -W
 repmgr_monitor_interval_secs: 2
 repmgr_retry_promote_interval_secs: 300
-
-# Cron variables:
-
-repmgr_cron: []
-
-# repmgr_cron:
-#   hour: 4
-#   minute: 0
-#   day: *
-#   job: "psql -U postgres repmgr -c \"DELETE * FROM repmgr_test.repl_monitor WHERE last_monitor_time < current_timestamp - interval '4d'\""
-#   name: "Removing repl_monitor old records"
-#   weekday: *
-#   user: "postgres"
-#   month: *
-#   weekday: *  
-#   disabled: false
-
-# Need cron task or not
-repmgr_cron_status: True

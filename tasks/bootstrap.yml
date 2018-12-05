@@ -41,7 +41,7 @@
     {% endfor %}
   register: __ssh_fingerprints
 
-- name: ssh known_hosts
+- name: ssh known_hostss
   lineinfile:
     dest: ~{{ repmgr_user }}/.ssh/known_hosts
     create: yes
@@ -124,10 +124,3 @@
       test $RETRY -ge 15 && exit 1
       sleep 1
     done
-
-- name: repmgrd service start
-  service:
-    name: repmgrd
-    enabled: true
-    state: started
-
