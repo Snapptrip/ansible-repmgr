@@ -1,7 +1,7 @@
 repmgr_package_state: present
 
 repmgr_packages:
-  - repmgr
+  - postgresql-10-repmgr
   - python-psycopg2
   - rsync
   - ssh
@@ -10,15 +10,17 @@ repmgr_conf: /etc/repmgr.conf
 repmgr_user: postgres
 repmgr_group: postgres
 repmgr_cluster_group: all
-repmgr_bootstrap: off
+repmgr_bootstrap: on
 repmgr_pg_data_dir: /var/lib/postgresql/10/main
+repmgr_pg_conf_dir: /etc/postgresql/10/main/
+repmgr_pg_bindir: /usr/lib/postgresql/10/bin/
 
 repmgr_cluster_name: main
 # repmgr_node_id must be set
 repmgr_is_master: off
-repmgr_master_node: "{{ hostvars[groups[repmgr_cluster_group][0]].ansible_default_ipv4.address }}"
-repmgr_node_name: "{{ ansible_default_ipv4.address }}"
-repmgr_node_address: "{{ ansible_default_ipv4.address }}"
+repmgr_master_node: "{{ hostvars[repmgr_master].replication_ip }}"
+repmgr_node_name: "{{ replication_ip }}"
+repmgr_node_address: "{{ replication_ip }}"
 repmgr_db_name: repmgr
 repmgr_db_user: repmgr
 # repmgr_db_password must be set
@@ -59,7 +61,7 @@ repmgr_event_notifications: []
 repmgr_rsync_options: --archive --checksum --compress --progress
 repmgr_ssh_options: -q -o ConnectTimeout=10
 repmgr_pg_ctl_options: -s
-repmgr_pg_basebackup_options: --xlog-method=s
+repmgr_pg_basebackup_options: --wal-method=stream
 repmgr_master_response_timeout: 60
 repmgr_reconnect_attempts: 6
 repmgr_reconnect_interval: 10

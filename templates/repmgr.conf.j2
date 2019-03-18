@@ -22,7 +22,7 @@ node_id={{ repmgr_node_id | mandatory }}
 # node's current role, e.g. "primary" or "standby1",
 # as roles can change and it will be confusing if
 # the current primary is called "standby1".
-node_name='{{ hostname }}'
+node_name='{{ ansible_hostname }}'
 
 # Database connection information as a conninfo string.
 # All servers in the cluster must be able to connect to
@@ -468,4 +468,4 @@ ssh_options={{ repmgr_ssh_options }}
 # If a BDR node was offline and has become available
 # maximum length of time in seconds to wait for the
 # node to reconnect to the cluster
-#bdr_recovery_timeout                    
+#bdr_recovery_timeout

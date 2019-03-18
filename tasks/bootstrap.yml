@@ -67,12 +67,8 @@
     state: present
   when: repmgr_is_master|bool
 
-- name: install repmgr functions
-  shell: psql -U {{ repmgr_db_user }} -f {{ repmgr_func_path }} {{ repmgr_db_name }}
-  when: repmgr_is_master|bool
-
 - name: register master node
-  shell: repmgrctl master register
+  shell: repmgrctl master register -F
   become_user: "{{ repmgr_user }}"
   when: repmgr_is_master|bool
 
@@ -112,15 +108,15 @@
   become_user: "{{ repmgr_user }}"
   when: not repmgr_is_master|bool
 
-- name: FIXME -- wait for standby node information to appear in replicated db
-  shell: |
-    RETRY=0
-    while true; do
-      RETRY=$(($RETRY + 1))
-      COUNT=$(psql -qAt -U {{ repmgr_db_user }} \
-        -c 'SELECT COUNT(1) FROM repmgr_test.repl_nodes WHERE id={{ repmgr_node_id }}' \
-        {{ repmgr_db_name }})
-      test $COUNT -ge 1 && exit 0
-      test $RETRY -ge 15 && exit 1
-      sleep 1
-    done
+# - name: FIXME -- wait for standby node information to appear in replicated db
+#   shell: |
+#     RETRY=0
+#     while true; do
+#       RETRY=$(($RETRY + 1))
+#       COUNT=$(psql -qAt -U {{ repmgr_db_user }} \
+#         -c 'SELECT COUNT(1) FROM repmgr_test.repl_nodes WHERE id={{ repmgr_node_id }}' \
+#         {{ repmgr_db_name }})
+#       test $COUNT -ge 1 && exit 0
+#       test $RETRY -ge 15 && exit 1
+#       sleep 1
+#     done
